@@ -39,9 +39,9 @@ function CardContent({ children, className = "", ...props }) {
 
 const businessInfo = {
   businessName: "FreshFlow Duct Cleaning",
-  phone: "(555) 123-4567",
+  phone: "805-265-3032",
   email: "info@freshflowducts.com",
-  whatsapp: "15551234567",
+  whatsapp: "805-265-3032",
   serviceArea: "Your City & Nearby Areas",
   heroBadge: "Professional Air Duct Cleaning Services",
   heroTitle: "Breathe Cleaner Air in Your Home Today",
