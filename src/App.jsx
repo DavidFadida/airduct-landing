@@ -1,7 +1,17 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, CheckCircle, Wind, ShieldCheck, Clock, Star, Sparkles, Home, Menu, MessageCircle, Leaf } from "lucide-react";
+import { Phone, Mail, CheckCircle, Wind, ShieldCheck, Clock, Star, Sparkles, Home, Menu, MessageCircle, Leaf, ChevronLeft, ChevronRight } from "lucide-react";
+import heroImage from "./assets/hero.png";
 
+const galleryImageModules = import.meta.glob("./assets/gallery/images/*.{jpg,jpeg,png,webp,avif,gif}", {
+  eager: true,
+  import: "default",
+});
+
+const galleryVideoModules = import.meta.glob("./assets/gallery/videos/*.{mp4,webm,ogg,mov}", {
+  eager: true,
+  import: "default",
+});
 
 function cx(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -72,6 +82,46 @@ const defaultReviews = [
   { name: "Olivia K.", rating: 5, quote: "Great service and fair pricing. I would definitely recommend them." },
 ];
 
+function fileNameToTitle(path) {
+  const fileName = path.split("/").pop()?.replace(/\.[^/.]+$/, "") || "Project media";
+  return fileName
+    .replaceAll("-", " ")
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+const galleryMedia = [
+  ...Object.entries(galleryImageModules)
+    .sort(([firstPath], [secondPath]) => firstPath.localeCompare(secondPath))
+    .map(([path, src]) => ({
+      type: "image",
+      src,
+      alt: `${fileNameToTitle(path)} air duct cleaning project`,
+      title: fileNameToTitle(path),
+      description: "Photo from a recent residential air duct cleaning job.",
+    })),
+  ...Object.entries(galleryVideoModules)
+    .sort(([firstPath], [secondPath]) => firstPath.localeCompare(secondPath))
+    .map(([path, src]) => ({
+      type: "video",
+      src,
+      poster: heroImage,
+      alt: `${fileNameToTitle(path)} air duct cleaning video`,
+      title: fileNameToTitle(path),
+      description: "Muted project video from our air duct cleaning work.",
+    })),
+];
+
+const visibleGalleryMedia = galleryMedia.length
+  ? galleryMedia
+  : [{
+      type: "image",
+      src: heroImage,
+      alt: "Technician preparing professional duct cleaning equipment",
+      title: "Add Gallery Media",
+      description: "Add images to src/assets/gallery/images or videos to src/assets/gallery/videos.",
+    }];
+
 function sanitizeText(value, maxLength = 160) {
   return String(value || "")
     .replaceAll("<", "")
@@ -99,6 +149,26 @@ function isValidEmail(value) {
   return email.length <= 80 && email.includes("@") && email.includes(".") && !email.includes(" ");
 }
 
+function getInitialReviews() {
+  if (typeof window === "undefined") return defaultReviews;
+
+  try {
+    const saved = window.localStorage.getItem("airDuctReviews");
+    if (!saved) return defaultReviews;
+    const parsed = JSON.parse(saved);
+    if (!Array.isArray(parsed)) return defaultReviews;
+    const safeReviews = parsed.slice(0, 20).map((review) => ({
+      name: sanitizeText(review.name, 50),
+      rating: Math.min(5, Math.max(1, Number(review.rating) || 5)),
+      quote: sanitizeText(review.quote, 220),
+    })).filter((review) => review.name && review.quote);
+    return safeReviews.length ? safeReviews : defaultReviews;
+  } catch {
+    window.localStorage.removeItem("airDuctReviews");
+    return defaultReviews;
+  }
+}
+
 export default function AirDuctCleaningLandingPage() {
   const { businessName, phone, email, whatsapp, serviceArea, heroBadge, heroTitle, heroSubtitle, footerText } = businessInfo;
   const cleanPhone = useMemo(() => onlyDigits(phone), [phone]);
@@ -106,28 +176,19 @@ export default function AirDuctCleaningLandingPage() {
   const whatsappUrl = `https://wa.me/${cleanWhatsapp}`;
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [reviews, setReviews] = useState(defaultReviews);
+  const [reviews, setReviews] = useState(getInitialReviews);
   const [reviewForm, setReviewForm] = useState({ name: "", rating: 5, quote: "" });
   const [reviewStatus, setReviewStatus] = useState("");
   const [leadForm, setLeadForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [leadStatus, setLeadStatus] = useState("");
-
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem("airDuctReviews");
-      if (!saved) return;
-      const parsed = JSON.parse(saved);
-      if (!Array.isArray(parsed)) return;
-      const safeReviews = parsed.slice(0, 20).map((review) => ({
-        name: sanitizeText(review.name, 50),
-        rating: Math.min(5, Math.max(1, Number(review.rating) || 5)),
-        quote: sanitizeText(review.quote, 220),
-      })).filter((review) => review.name && review.quote);
-      if (safeReviews.length) setReviews(safeReviews);
-    } catch {
-      window.localStorage.removeItem("airDuctReviews");
-    }
-  }, []);
+  const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const activeGalleryItem = visibleGalleryMedia[activeGalleryIndex];
+  const goToPreviousGalleryItem = () => {
+    setActiveGalleryIndex((index) => (index === 0 ? visibleGalleryMedia.length - 1 : index - 1));
+  };
+  const goToNextGalleryItem = () => {
+    setActiveGalleryIndex((index) => (index === visibleGalleryMedia.length - 1 ? 0 : index + 1));
+  };
 
   useEffect(() => {
     try {
@@ -179,6 +240,7 @@ export default function AirDuctCleaningLandingPage() {
   const navLinks = [
     { href: "#services", label: "Services" },
     { href: "#benefits", label: "Benefits" },
+    { href: "#gallery", label: "Gallery" },
     { href: "#reviews", label: "Reviews" },
     { href: "#contact", label: "Contact" },
   ];
@@ -336,6 +398,109 @@ export default function AirDuctCleaningLandingPage() {
       </section>
 
       <section className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8"><div className="grid gap-6 md:grid-cols-3">{[{ icon: Clock, title: "Fast Scheduling", text: "Book a convenient appointment with quick response times." }, { icon: ShieldCheck, title: "Trusted Technicians", text: "Professional, respectful service from trained cleaners." }, { icon: Star, title: "Satisfaction Focused", text: "Clear communication, clean work, and reliable results." }].map((item) => <div key={item.title} className="rounded-3xl bg-emerald-900 p-7 text-white shadow-lg"><item.icon className="mb-5 h-8 w-8 text-emerald-300" aria-hidden="true" /><h3 className="text-xl font-bold">{item.title}</h3><p className="mt-3 leading-7 text-emerald-100">{item.text}</p></div>)}</div></section>
+
+      <section id="gallery" className="relative z-10 bg-white/72 py-16 backdrop-blur-[1px]">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Gallery</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Our Work</h2>
+            <p className="mt-4 text-lg text-slate-600">A quick look at clean setups, careful duct work, and finished details from residential jobs.</p>
+          </div>
+
+          <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center">
+            <div className="relative overflow-hidden rounded-[2rem] bg-slate-950 shadow-2xl ring-1 ring-emerald-100">
+              <motion.div
+                key={`${activeGalleryItem.type}-${activeGalleryIndex}`}
+                initial={{ opacity: 0, x: 24 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
+                className="aspect-[16/10] min-h-[18rem] sm:min-h-[26rem]"
+              >
+                {activeGalleryItem.type === "video" ? (
+                  <video
+                    className="h-full w-full object-cover"
+                    src={activeGalleryItem.src}
+                    poster={activeGalleryItem.poster}
+                    muted
+                    playsInline
+                    controls
+                    preload="metadata"
+                    aria-label={activeGalleryItem.alt}
+                  />
+                ) : (
+                  <img
+                    src={activeGalleryItem.src}
+                    alt={activeGalleryItem.alt}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                  />
+                )}
+              </motion.div>
+
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent p-6 text-white">
+                <p className="text-sm font-semibold uppercase tracking-widest text-emerald-200">{activeGalleryItem.type === "video" ? "Video" : "Photo"}</p>
+                <h3 className="mt-2 text-2xl font-bold">{activeGalleryItem.title}</h3>
+                <p className="mt-2 max-w-xl text-sm leading-6 text-slate-100">{activeGalleryItem.description}</p>
+              </div>
+
+              <button
+                type="button"
+                onClick={goToPreviousGalleryItem}
+                className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 text-slate-900 shadow-lg transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                aria-label="Previous gallery item"
+              >
+                <ChevronLeft className="h-6 w-6" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={goToNextGalleryItem}
+                className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 text-slate-900 shadow-lg transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                aria-label="Next gallery item"
+              >
+                <ChevronRight className="h-6 w-6" aria-hidden="true" />
+              </button>
+            </div>
+
+            <div className="rounded-[2rem] bg-emerald-950 p-6 text-white shadow-xl">
+              <p className="text-sm font-bold uppercase tracking-widest text-emerald-200">Project Slides</p>
+              <div className="mt-5 grid gap-3">
+                {visibleGalleryMedia.map((item, index) => (
+                  <button
+                    key={`${item.title}-${index}`}
+                    type="button"
+                    onClick={() => setActiveGalleryIndex(index)}
+                    className={cx(
+                      "rounded-2xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200",
+                      index === activeGalleryIndex
+                        ? "border-emerald-300 bg-white text-slate-950"
+                        : "border-white/15 bg-white/8 text-emerald-50 hover:border-emerald-300/70 hover:bg-white/12"
+                    )}
+                    aria-current={index === activeGalleryIndex ? "true" : undefined}
+                  >
+                    <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">{item.type}</span>
+                    <span className="mt-1 block text-base font-bold">{item.title}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="mt-6 flex items-center justify-center gap-2" aria-label="Gallery pagination">
+                {visibleGalleryMedia.map((item, index) => (
+                  <button
+                    key={`gallery-dot-${item.title}`}
+                    type="button"
+                    onClick={() => setActiveGalleryIndex(index)}
+                    className={cx(
+                      "h-3 rounded-full transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200",
+                      index === activeGalleryIndex ? "w-8 bg-emerald-300" : "w-3 bg-white/35 hover:bg-white/70"
+                    )}
+                    aria-label={`Go to gallery item ${index + 1}`}
+                    aria-current={index === activeGalleryIndex ? "true" : undefined}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section id="reviews" className="relative z-10 bg-emerald-50/72 py-16 backdrop-blur-[1px]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
