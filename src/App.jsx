@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, CheckCircle, Wind, ShieldCheck, Clock, Star, Sparkles, Home, Menu, MessageCircle, Leaf, ChevronLeft, ChevronRight } from "lucide-react";
+import { Phone, Mail, CheckCircle, Wind, ShieldCheck, Clock, Star, Sparkles, Home, Menu, MessageCircle, Leaf, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
 import heroImage from "./assets/hero.png";
 
 const galleryImageModules = import.meta.glob("./assets/gallery/images/*.{jpg,jpeg,png,webp,avif,gif}", {
@@ -53,6 +53,7 @@ const businessInfo = {
   email: "info@freshflowducts.com",
   whatsapp: "805-265-3032",
   serviceArea: "Your City & Nearby Areas",
+  location: "Los Angeles, CA",
   heroBadge: "Professional Air Duct Cleaning Services",
   heroTitle: "Breathe Cleaner Air in Your Home Today",
   heroSubtitle: "Improve indoor air quality, reduce dust, and keep your HVAC system running efficiently with trusted residential air duct cleaning.",
@@ -170,7 +171,7 @@ function getInitialReviews() {
 }
 
 export default function AirDuctCleaningLandingPage() {
-  const { businessName, phone, email, whatsapp, serviceArea, heroBadge, heroTitle, heroSubtitle, footerText } = businessInfo;
+  const { businessName, phone, email, whatsapp, serviceArea, location, heroBadge, heroTitle, heroSubtitle, footerText } = businessInfo;
   const cleanPhone = useMemo(() => onlyDigits(phone), [phone]);
   const cleanWhatsapp = useMemo(() => onlyDigits(whatsapp), [whatsapp]);
   const whatsappUrl = `https://wa.me/${cleanWhatsapp}`;
@@ -575,7 +576,7 @@ export default function AirDuctCleaningLandingPage() {
           ))}
         </div>
         <div className="relative z-10 grid gap-10 rounded-[2rem] bg-white/95 p-6 shadow-xl ring-1 ring-slate-200 backdrop-blur-sm md:grid-cols-2 md:p-10">
-          <div><p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Free Quote</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Ready for cleaner air?</h2><p className="mt-4 text-lg leading-8 text-slate-600">Fill out the form and we’ll contact you shortly with pricing and availability in {serviceArea}.</p><div className="mt-8 rounded-3xl bg-slate-50 p-6"><p className="font-bold text-slate-950">Prefer to call?</p><div className="mt-2 flex flex-col gap-2"><a href={`tel:${cleanPhone}`} className="inline-flex items-center text-lg font-bold text-emerald-700 hover:text-emerald-900"><Phone className="mr-2 h-5 w-5" aria-hidden="true" /> {phone}</a><a href={`mailto:${email}`} className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><Mail className="mr-2 h-4 w-4" aria-hidden="true" /> {email}</a><a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><MessageCircle className="mr-2 h-4 w-4" aria-hidden="true" /> Message us on WhatsApp</a></div></div></div>
+          <div><p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Free Quote</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Ready for cleaner air?</h2><p className="mt-4 text-lg leading-8 text-slate-600">Fill out the form and we’ll contact you shortly with pricing and availability in {serviceArea}.</p><div className="mt-8 rounded-3xl bg-slate-50 p-6"><p className="font-bold text-slate-950">Prefer to call?</p><div className="mt-2 flex flex-col gap-2"><a href={`tel:${cleanPhone}`} className="inline-flex items-center text-lg font-bold text-emerald-700 hover:text-emerald-900"><Phone className="mr-2 h-5 w-5" aria-hidden="true" /> {phone}</a><a href={`mailto:${email}`} className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><Mail className="mr-2 h-4 w-4" aria-hidden="true" /> {email}</a><p className="inline-flex items-center text-base font-semibold text-slate-700"><MapPin className="mr-2 h-4 w-4 text-emerald-700" aria-hidden="true" /> {location}</p><a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><MessageCircle className="mr-2 h-4 w-4" aria-hidden="true" /> Message us on WhatsApp</a></div></div></div>
           <form onSubmit={handleLeadSubmit} className="grid gap-4" aria-label="Request a free quote">
             <div><label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">Full name</label><input id="name" name="name" type="text" autoComplete="name" maxLength={60} value={leadForm.name} onChange={(event) => setLeadForm({ ...leadForm, name: event.target.value })} required className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100" /></div>
             <div><label htmlFor="phone" className="mb-2 block text-sm font-semibold text-slate-700">Phone number</label><input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={25} value={leadForm.phone} onChange={(event) => setLeadForm({ ...leadForm, phone: event.target.value })} required className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100" /></div>
