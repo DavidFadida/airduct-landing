@@ -215,7 +215,7 @@ export default function AirDuctCleaningLandingPage() {
     setReviewStatus("Thank you! Your review was saved in this browser.");
   };
 
-  const handleLeadSubmit = (event) => {
+  const handleLeadSubmit = async (event) => {
     event.preventDefault();
     const safeLead = {
       name: sanitizeText(leadForm.name, 60),
@@ -234,8 +234,27 @@ export default function AirDuctCleaningLandingPage() {
       return;
     }
 
-    setLeadStatus("Thank you! Your request is ready to be connected to email, CRM, Firebase, or Supabase.");
-    setLeadForm({ name: "", phone: "", email: "", message: "" });
+    try {
+      setLeadStatus("Sending your request...");
+
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(safeLead),
+      });
+
+      if (!response.ok) {
+        setLeadStatus("Something went wrong. Please try again.");
+        return;
+      }
+
+      setLeadStatus("Thank you! Your request was sent successfully.");
+      setLeadForm({ name: "", phone: "", email: "", message: "" });
+    } catch {
+      setLeadStatus("Something went wrong. Please try again.");
+    }
   };
 
   const navLinks = [
