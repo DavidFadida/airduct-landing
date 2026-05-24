@@ -50,7 +50,7 @@ export default async function handler(req, res) {
 
     const resend = new Resend(process.env.RESEND_API_KEY);
 
-    await resend.emails.send({
+    const { data, error } = await resend.emails.send({
       from: "Air Duct Leads <onboarding@resend.dev>",
       to: process.env.LEAD_TO_EMAIL,
       replyTo: email || process.env.LEAD_TO_EMAIL,
@@ -64,8 +64,15 @@ export default async function handler(req, res) {
       `,
     });
 
-    return res.status(200).json({ success: true });
-  } catch {
+    if (error) {
+      console.error("Resend failed to send lead email:", error);
+      return res.status(502).json({ error: "Email provider rejected the message" });
+    }
+
+    console.info("Lead email sent:", data?.id);
+    return res.status(200).json({ success: true, id: data?.id });
+  } catch (error) {
+    console.error("Contact API failed:", error);
     return res.status(500).json({ error: "Failed to send lead" });
   }
 }
