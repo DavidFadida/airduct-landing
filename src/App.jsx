@@ -17,17 +17,123 @@ function cx(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function WhatsAppIcon({ className = "" }) {
+function LogoWindIcon({ className = "" }) {
   return (
-    <svg className={className} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <g className={className}>
+      <circle cx="0" cy="0" r="17" fill="none" stroke="currentColor" strokeWidth="4" />
+      <path d="M-9 -5H4C10 -5 10 -12 4 -12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" fill="none" />
+      <path d="M-11 2H8C14 2 14 9 8 9" stroke="currentColor" strokeWidth="3" strokeLinecap="round" fill="none" />
+      <path d="M-7 9H0" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    </g>
+  );
+}
+
+function LogoShieldIcon({ className = "" }) {
+  return (
+    <g className={className}>
+      <circle cx="0" cy="0" r="17" fill="none" stroke="currentColor" strokeWidth="4" />
+      <path d="M0 -11L10 -7V1C10 8 5 12 0 15C-5 12 -10 8 -10 1V-7L0 -11Z" fill="currentColor" opacity="0.18" />
+      <path d="M-7 1L-2 6L8 -6" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </g>
+  );
+}
+
+function LogoSupportIcon({ className = "" }) {
+  return (
+    <g className={className}>
+      <circle cx="0" cy="0" r="17" fill="none" stroke="currentColor" strokeWidth="4" />
+      <path d="M-10 1V-2C-10 -10 -4 -14 0 -14C4 -14 10 -10 10 -2V1" stroke="currentColor" strokeWidth="4" strokeLinecap="round" fill="none" />
+      <path d="M-12 1V9H-7V1H-12ZM7 1V9H12V1H7Z" fill="currentColor" />
+      <path d="M8 12C4 15 -2 15 -6 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" fill="none" />
+    </g>
+  );
+}
+
+function MagicTouchLogo({ className = "" }) {
+  return (
+    <svg className={className} viewBox="0 0 420 430" fill="none" aria-hidden="true">
       <path
-        fill="#25D366"
-        d="M16 3.2c-7.06 0-12.8 5.62-12.8 12.54 0 2.43.72 4.79 2.06 6.82L3.8 28.8l6.43-1.41A13.02 13.02 0 0 0 16 28.29c7.06 0 12.8-5.62 12.8-12.55S23.06 3.2 16 3.2Z"
+        d="M82 146C96 63 198 30 292 74"
+        stroke="currentColor"
+        strokeWidth="12"
+        strokeLinecap="round"
+        opacity="0.9"
       />
       <path
-        fill="#FFFFFF"
-        d="M23.43 19.43c-.09-.14-.34-.23-.72-.42-.38-.18-2.24-1.08-2.58-1.2-.35-.13-.6-.19-.85.18-.25.37-.97 1.2-1.19 1.45-.22.24-.44.27-.81.09-.38-.19-1.59-.58-3.03-1.83-1.12-.98-1.88-2.19-2.1-2.56-.22-.37-.02-.57.17-.75.17-.17.38-.44.56-.65.19-.22.25-.37.38-.62.13-.25.06-.47-.03-.65-.09-.19-.85-2.01-1.16-2.75-.31-.72-.62-.62-.85-.63h-.72c-.25 0-.66.09-1 .47-.35.37-1.32 1.27-1.32 3.09 0 1.83 1.35 3.59 1.53 3.84.19.25 2.65 3.98 6.42 5.58.9.38 1.6.61 2.15.78.9.28 1.72.24 2.37.15.72-.11 2.24-.9 2.55-1.77.32-.87.32-1.61.22-1.77Z"
+        d="M118 148L174 94L230 148"
+        stroke="currentColor"
+        strokeWidth="12"
+        strokeLinejoin="round"
+        strokeLinecap="round"
       />
+      <path
+        d="M134 148V188H204"
+        stroke="currentColor"
+        strokeWidth="12"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M166 132H181M166 149H181M188 132H203M188 149H203"
+        stroke="currentColor"
+        strokeWidth="7"
+        strokeLinecap="round"
+      />
+      <path
+        d="M120 180C181 205 258 203 342 169"
+        stroke="currentColor"
+        strokeWidth="12"
+        strokeLinecap="round"
+      />
+      <path
+        d="M176 158C237 157 256 103 352 102"
+        stroke="currentColor"
+        strokeWidth="12"
+        strokeLinecap="round"
+        opacity="0.85"
+      />
+      <path
+        d="M184 183C246 182 274 133 370 128"
+        stroke="currentColor"
+        strokeWidth="10"
+        strokeLinecap="round"
+        opacity="0.55"
+      />
+      <path d="M286 71L294 91L314 99L294 107L286 127L278 107L258 99L278 91L286 71Z" fill="currentColor" />
+      <path d="M347 42L354 60L372 67L354 74L347 92L340 74L322 67L340 60L347 42Z" fill="currentColor" opacity="0.85" />
+      <path d="M238 95L243 108L256 113L243 118L238 131L233 118L220 113L233 108L238 95Z" fill="currentColor" opacity="0.75" />
+
+      <text x="210" y="235" textAnchor="middle" fill="currentColor" fontFamily="Georgia, serif" fontSize="46" fontWeight="700" letterSpacing="8">
+        MAGIC TOUCH
+      </text>
+      <line x1="34" y1="268" x2="84" y2="268" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+      <text x="210" y="278" textAnchor="middle" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="34" fontWeight="700" letterSpacing="18">
+        AIR CARE
+      </text>
+      <line x1="336" y1="268" x2="386" y2="268" stroke="currentColor" strokeWidth="4" strokeLinecap="round" />
+      <text x="210" y="306" textAnchor="middle" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="15" fontWeight="700" letterSpacing="6">
+        AIR &amp; DUCT CLEANING EXPERTS
+      </text>
+      <g transform="translate(65 344)">
+        <LogoWindIcon />
+        <text x="34" y="-3" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="13" fontWeight="800" letterSpacing="1.5">CLEANER AIR</text>
+      </g>
+      <line x1="150" y1="325" x2="150" y2="370" stroke="currentColor" strokeWidth="2" opacity="0.45" />
+      <g transform="translate(210 344)">
+        <LogoShieldIcon />
+        <text x="34" y="-8" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="13" fontWeight="800" letterSpacing="1.5">HEALTHIER</text>
+        <text x="34" y="9" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="13" fontWeight="800" letterSpacing="1.5">HOME</text>
+      </g>
+      <line x1="296" y1="325" x2="296" y2="370" stroke="currentColor" strokeWidth="2" opacity="0.45" />
+      <g transform="translate(342 344)">
+        <LogoSupportIcon />
+        <text x="26" y="-8" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="11" fontWeight="800" letterSpacing="1">ALWAYS HERE</text>
+        <text x="26" y="8" fill="currentColor" fontFamily="Arial, sans-serif" fontSize="11" fontWeight="800" letterSpacing="1">FOR YOU</text>
+      </g>
+      <path d="M86 397C139 424 281 424 334 397" stroke="currentColor" strokeWidth="8" strokeLinecap="round" opacity="0.85" />
+      <text x="210" y="402" textAnchor="middle" fill="currentColor" fontFamily="Brush Script MT, Segoe Script, cursive" fontSize="21">
+        We clean the air you breathe.
+      </text>
     </svg>
   );
 }
@@ -65,8 +171,7 @@ function CardContent({ children, className = "", ...props }) {
 const businessInfo = {
   businessName: "Magic Touch Air Care",
   phone: "888-2294777",
-  email: "info@freshflowducts.com",
-  whatsapp: "888-2294777",
+  email: "Magictouchaircare@gmail.com",
   serviceArea: "Your City & Nearby Areas",
   location: "Los Angeles, CA",
   heroBadge: "Professional Air Duct Cleaning Services",
@@ -186,10 +291,8 @@ function getInitialReviews() {
 }
 
 export default function AirDuctCleaningLandingPage() {
-  const { businessName, phone, email, whatsapp, serviceArea, location, heroBadge, heroTitle, heroSubtitle, footerText } = businessInfo;
+  const { businessName, phone, email, serviceArea, location, heroBadge, heroTitle, heroSubtitle, footerText } = businessInfo;
   const cleanPhone = useMemo(() => onlyDigits(phone), [phone]);
-  const cleanWhatsapp = useMemo(() => onlyDigits(whatsapp), [whatsapp]);
-  const whatsappUrl = `https://wa.me/${cleanWhatsapp}`;
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [reviews, setReviews] = useState(getInitialReviews);
@@ -351,17 +454,26 @@ export default function AirDuctCleaningLandingPage() {
 
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Main navigation">
-          <a href="#main-content" className="flex items-center gap-2 font-bold tracking-tight text-slate-950" aria-label={`${businessName} home`}>
-            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700"><Wind size={22} aria-hidden="true" /></span>
-            <span>{businessName}</span>
+          <a href="#main-content" className="flex items-center gap-3 text-emerald-700" aria-label={`${businessName} home`}>
+            <span className="flex h-20 w-32 shrink-0 items-center justify-center sm:h-24 sm:w-40">
+              <MagicTouchLogo className="h-full w-full drop-shadow-[0_8px_18px_rgba(4,120,87,0.18)]" />
+            </span>
+            <span className="text-base font-bold tracking-tight text-slate-950 sm:text-lg">{businessName}</span>
           </a>
 
-          <div className="hidden items-center gap-8 md:flex">
-            {navLinks.map((link) => <a key={link.href} href={link.href} className="text-sm font-medium text-slate-700 hover:text-emerald-700">{link.label}</a>)}
+          <div className="hidden items-center gap-2 rounded-3xl bg-emerald-50/80 p-2 ring-1 ring-emerald-100 md:flex">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="rounded-2xl px-4 py-3 text-sm font-bold text-slate-700 transition hover:bg-white hover:text-emerald-700 hover:shadow-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200 lg:px-5"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><Button variant="outline" className="rounded-2xl border-slate-300 px-5 py-5 text-base"><WhatsAppIcon className="mr-2 h-5 w-5" /> WhatsApp</Button></a>
             <a href={`tel:${cleanPhone}`}><Button className="rounded-2xl px-5 py-5 text-base"><Phone className="mr-2 h-4 w-4" aria-hidden="true" /> Call Now</Button></a>
           </div>
 
@@ -371,7 +483,7 @@ export default function AirDuctCleaningLandingPage() {
         {mobileMenuOpen && (
           <div className="border-t border-slate-200 bg-white px-4 py-4 md:hidden">
             <div className="mx-auto grid max-w-7xl gap-3">
-              {navLinks.map((link) => <a key={link.href} href={link.href} className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-emerald-50 hover:text-emerald-700" onClick={() => setMobileMenuOpen(false)}>{link.label}</a>)}
+              {navLinks.map((link) => <a key={link.href} href={link.href} className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-bold text-slate-700 ring-1 ring-emerald-100 hover:bg-white hover:text-emerald-700 hover:shadow-sm" onClick={() => setMobileMenuOpen(false)}>{link.label}</a>)}
               <a href={`tel:${cleanPhone}`} className="rounded-xl bg-emerald-600 px-3 py-3 text-center text-sm font-bold text-white">Call Now</a>
             </div>
           </div>
@@ -389,7 +501,6 @@ export default function AirDuctCleaningLandingPage() {
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-700">{heroSubtitle}</p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <a href="#contact"><Button className="w-full rounded-2xl px-8 py-6 text-base sm:w-auto">Get a Free Quote</Button></a>
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><Button variant="outline" className="w-full rounded-2xl border-slate-300 bg-white px-8 py-6 text-base sm:w-auto"><WhatsAppIcon className="mr-2 h-5 w-5" /> WhatsApp Us</Button></a>
               <a href={`tel:${cleanPhone}`}><Button variant="outline" className="w-full rounded-2xl border-slate-300 bg-white px-8 py-6 text-base sm:w-auto"><Phone className="mr-2 h-4 w-4" aria-hidden="true" /> {phone}</Button></a>
             </div>
             <ul className="mt-8 grid gap-3 text-sm font-medium text-slate-700 sm:grid-cols-3" aria-label="Service highlights">
@@ -688,7 +799,6 @@ export default function AirDuctCleaningLandingPage() {
                 <a href={`tel:${cleanPhone}`} className="inline-flex items-center text-lg font-bold text-emerald-700 hover:text-emerald-900"><Phone className="mr-2 h-5 w-5" aria-hidden="true" /> {phone}</a>
                 <a href={`mailto:${email}`} className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><Mail className="mr-2 h-4 w-4" aria-hidden="true" /> {email}</a>
                 <p className="inline-flex items-center text-base font-semibold text-slate-700"><MapPin className="mr-2 h-4 w-4 text-emerald-700" aria-hidden="true" /> {location}</p>
-                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><WhatsAppIcon className="mr-2 h-5 w-5" /> Message us on WhatsApp</a>
               </div>
             </div>
 
