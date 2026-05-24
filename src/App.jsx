@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Phone, Mail, CheckCircle, Wind, ShieldCheck, Clock, Star, Sparkles, Home, Menu, MessageCircle, Leaf, ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { Phone, Mail, CheckCircle, Wind, ShieldCheck, Clock, Star, Sparkles, Home, Menu, Leaf, ChevronLeft, ChevronRight, MapPin, Maximize2, Play, X } from "lucide-react";
 import heroImage from "./assets/hero.png";
 
 const galleryImageModules = import.meta.glob("./assets/gallery/images/*.{jpg,jpeg,png,webp,avif,gif}", {
@@ -15,6 +15,21 @@ const galleryVideoModules = import.meta.glob("./assets/gallery/videos/*.{mp4,web
 
 function cx(...classes) {
   return classes.filter(Boolean).join(" ");
+}
+
+function WhatsAppIcon({ className = "" }) {
+  return (
+    <svg className={className} viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <path
+        fill="#25D366"
+        d="M16 3.2c-7.06 0-12.8 5.62-12.8 12.54 0 2.43.72 4.79 2.06 6.82L3.8 28.8l6.43-1.41A13.02 13.02 0 0 0 16 28.29c7.06 0 12.8-5.62 12.8-12.55S23.06 3.2 16 3.2Z"
+      />
+      <path
+        fill="#FFFFFF"
+        d="M23.43 19.43c-.09-.14-.34-.23-.72-.42-.38-.18-2.24-1.08-2.58-1.2-.35-.13-.6-.19-.85.18-.25.37-.97 1.2-1.19 1.45-.22.24-.44.27-.81.09-.38-.19-1.59-.58-3.03-1.83-1.12-.98-1.88-2.19-2.1-2.56-.22-.37-.02-.57.17-.75.17-.17.38-.44.56-.65.19-.22.25-.37.38-.62.13-.25.06-.47-.03-.65-.09-.19-.85-2.01-1.16-2.75-.31-.72-.62-.62-.85-.63h-.72c-.25 0-.66.09-1 .47-.35.37-1.32 1.27-1.32 3.09 0 1.83 1.35 3.59 1.53 3.84.19.25 2.65 3.98 6.42 5.58.9.38 1.6.61 2.15.78.9.28 1.72.24 2.37.15.72-.11 2.24-.9 2.55-1.77.32-.87.32-1.61.22-1.77Z"
+      />
+    </svg>
+  );
 }
 
 function Button({ children, className = "", variant = "default", type = "button", ...props }) {
@@ -48,16 +63,16 @@ function CardContent({ children, className = "", ...props }) {
 }
 
 const businessInfo = {
-  businessName: "FreshFlow Duct Cleaning",
-  phone: "805-265-3032",
+  businessName: "Magic Touch Air Care",
+  phone: "888-2294777",
   email: "info@freshflowducts.com",
-  whatsapp: "805-265-3032",
+  whatsapp: "888-2294777",
   serviceArea: "Your City & Nearby Areas",
   location: "Los Angeles, CA",
   heroBadge: "Professional Air Duct Cleaning Services",
   heroTitle: "Breathe Cleaner Air in Your Home Today",
   heroSubtitle: "Improve indoor air quality, reduce dust, and keep your HVAC system running efficiently with trusted residential air duct cleaning.",
-  footerText: "© 2026 FreshFlow Duct Cleaning. All rights reserved.",
+  footerText: "© 2026 Magic Touch Air Care. All rights reserved.",
 };
 
 const cleaningParticles = Array.from({ length: 42 }, (_, index) => ({
@@ -183,6 +198,9 @@ export default function AirDuctCleaningLandingPage() {
   const [leadForm, setLeadForm] = useState({ name: "", phone: "", email: "", message: "" });
   const [leadStatus, setLeadStatus] = useState("");
   const [activeGalleryIndex, setActiveGalleryIndex] = useState(0);
+  const [expandedGalleryItem, setExpandedGalleryItem] = useState(null);
+  const [isGalleryVideoPlaying, setIsGalleryVideoPlaying] = useState(false);
+  const galleryVideoRef = useRef(null);
   const activeGalleryItem = visibleGalleryMedia[activeGalleryIndex];
   const goToPreviousGalleryItem = () => {
     setActiveGalleryIndex((index) => (index === 0 ? visibleGalleryMedia.length - 1 : index - 1));
@@ -198,6 +216,21 @@ export default function AirDuctCleaningLandingPage() {
       // localStorage may be unavailable in private mode.
     }
   }, [reviews]);
+
+  useEffect(() => {
+    if (!expandedGalleryItem) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setExpandedGalleryItem(null);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [expandedGalleryItem]);
+
+  const playActiveGalleryVideo = () => {
+    galleryVideoRef.current?.play();
+  };
 
   const handleReviewSubmit = (event) => {
     event.preventDefault();
@@ -328,7 +361,7 @@ export default function AirDuctCleaningLandingPage() {
           </div>
 
           <div className="hidden items-center gap-3 md:flex">
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><Button variant="outline" className="rounded-2xl border-slate-300 px-5 py-5 text-base"><MessageCircle className="mr-2 h-4 w-4" aria-hidden="true" /> WhatsApp</Button></a>
+            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><Button variant="outline" className="rounded-2xl border-slate-300 px-5 py-5 text-base"><WhatsAppIcon className="mr-2 h-5 w-5" /> WhatsApp</Button></a>
             <a href={`tel:${cleanPhone}`}><Button className="rounded-2xl px-5 py-5 text-base"><Phone className="mr-2 h-4 w-4" aria-hidden="true" /> Call Now</Button></a>
           </div>
 
@@ -356,7 +389,7 @@ export default function AirDuctCleaningLandingPage() {
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-700">{heroSubtitle}</p>
             <div className="mt-8 flex flex-col gap-4 sm:flex-row">
               <a href="#contact"><Button className="w-full rounded-2xl px-8 py-6 text-base sm:w-auto">Get a Free Quote</Button></a>
-              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><Button variant="outline" className="w-full rounded-2xl border-slate-300 bg-white px-8 py-6 text-base sm:w-auto">WhatsApp Us</Button></a>
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer"><Button variant="outline" className="w-full rounded-2xl border-slate-300 bg-white px-8 py-6 text-base sm:w-auto"><WhatsAppIcon className="mr-2 h-5 w-5" /> WhatsApp Us</Button></a>
               <a href={`tel:${cleanPhone}`}><Button variant="outline" className="w-full rounded-2xl border-slate-300 bg-white px-8 py-6 text-base sm:w-auto"><Phone className="mr-2 h-4 w-4" aria-hidden="true" /> {phone}</Button></a>
             </div>
             <ul className="mt-8 grid gap-3 text-sm font-medium text-slate-700 sm:grid-cols-3" aria-label="Service highlights">
@@ -373,29 +406,62 @@ export default function AirDuctCleaningLandingPage() {
               transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
               aria-hidden="true"
             />
-            <div className="relative rounded-[2rem] bg-white p-4 shadow-2xl ring-1 ring-emerald-100">
-              <div className="aspect-[4/3] rounded-[1.5rem] bg-gradient-to-br from-emerald-100 via-white to-slate-100 p-6">
-                <div className="flex h-full flex-col justify-between rounded-[1.25rem] border border-emerald-100 bg-white/70 p-6 backdrop-blur">
-                  <div>
-                    <motion.div
-                      className="mb-6 flex h-16 w-16 items-center justify-center rounded-3xl bg-emerald-600 text-white shadow-lg"
-                      animate={{ rotate: [0, 4, -4, 0], scale: [1, 1.05, 1] }}
-                      transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
-                    >
-                      <Sparkles size={30} aria-hidden="true" />
-                    </motion.div>
-                    <h2 className="text-2xl font-bold text-slate-950">Cleaner ducts. Cleaner air.</h2>
-                    <p className="mt-3 text-slate-700">Deep cleaning for vents, ducts, returns, and HVAC airflow pathways.</p>
-                    <div className="mt-6 h-3 overflow-hidden rounded-full bg-emerald-100">
-                      <motion.div
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-lime-400 to-green-500"
-                        initial={{ x: "-100%" }}
-                        animate={{ x: ["-100%", "120%"] }}
-                        transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
-                      />
+            <div className="relative overflow-hidden rounded-[2rem] bg-slate-950 p-5 shadow-2xl ring-1 ring-emerald-100">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(16,185,129,0.28),transparent_34%),radial-gradient(circle_at_80%_70%,rgba(132,204,22,0.22),transparent_32%)]" aria-hidden="true" />
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[1.5rem] border border-white/10 bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-950 p-5 text-white">
+                <motion.div
+                  className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full border border-emerald-300/25"
+                  animate={{ scale: [0.9, 1.12, 0.9], opacity: [0.35, 0.85, 0.35] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  aria-hidden="true"
+                />
+                <motion.div
+                  className="absolute left-1/2 top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/15 blur-xl"
+                  animate={{ scale: [1, 1.2, 1], opacity: [0.45, 0.8, 0.45] }}
+                  transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+                  aria-hidden="true"
+                />
+
+                <div className="relative z-10 flex h-full flex-col justify-between">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-widest text-emerald-200">Home Air Refresh</p>
+                      <h2 className="mt-2 text-2xl font-extrabold tracking-tight sm:text-3xl">Magic Touch Clean Zone</h2>
+                    </div>
+                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/12 text-emerald-200 ring-1 ring-white/15">
+                      <Sparkles size={24} aria-hidden="true" />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-3"><div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-3xl font-extrabold text-emerald-700">98%</p><p className="text-sm text-slate-600">Customer satisfaction</p></div><div className="rounded-2xl bg-white p-4 shadow-sm"><p className="text-3xl font-extrabold text-emerald-700">24h</p><p className="text-sm text-slate-600">Fast response</p></div></div>
+
+                  <div className="flex items-center justify-center">
+                    <div className="relative flex h-48 w-48 items-center justify-center rounded-full bg-white/10 p-6 shadow-[0_0_70px_rgba(16,185,129,0.35)] ring-1 ring-white/15 sm:h-52 sm:w-52">
+                      <motion.div
+                        className="absolute inset-3 rounded-full border-4 border-emerald-300 border-t-lime-200 sm:inset-4"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
+                        aria-hidden="true"
+                      />
+                      <div className="relative z-10 max-w-32 text-center sm:max-w-36">
+                        <p className="text-2xl font-black leading-tight text-white sm:text-3xl">Clean Air<br />Pros</p>
+                        <p className="mx-auto mt-2 max-w-28 text-[10px] font-bold uppercase leading-4 tracking-wide text-emerald-200 sm:max-w-32">Built for fresher homes</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+                    {[
+                      { icon: Wind, label: "Ducts" },
+                      { icon: Home, label: "Vents" },
+                      { icon: ShieldCheck, label: "HVAC" },
+                      { icon: Sparkles, label: "Chimney" },
+                      { icon: Leaf, label: "Attic" },
+                    ].map((item) => (
+                      <div key={item.label} className="rounded-2xl bg-white/10 p-3 text-center ring-1 ring-white/10 backdrop-blur">
+                        <item.icon className="mx-auto h-5 w-5 text-emerald-200" aria-hidden="true" />
+                        <p className="mt-2 text-xs font-bold uppercase tracking-wider text-white">{item.label}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
@@ -404,9 +470,15 @@ export default function AirDuctCleaningLandingPage() {
       </section>
 
       <section id="services" className="relative z-10 mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Our Services</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Complete air duct cleaning for a healthier home</h2><p className="mt-4 text-lg text-slate-600">We remove dust buildup, debris, odors, and airflow blockages using professional-grade equipment.</p></div>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
-          {[{ icon: Wind, title: "Air Duct Cleaning", text: "Deep cleaning of supply and return ducts to help reduce dust and improve airflow." }, { icon: Home, title: "Vent & Register Cleaning", text: "Careful cleaning of vents, registers, and grilles throughout your home." }, { icon: ShieldCheck, title: "HVAC System Care", text: "Support better HVAC performance with cleaner airflow pathways and fewer contaminants." }].map((item) => <Card key={item.title} className="rounded-3xl border-slate-200 bg-white shadow-sm"><CardContent className="p-7"><div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700"><item.icon aria-hidden="true" /></div><h3 className="text-xl font-bold text-slate-950">{item.title}</h3><p className="mt-3 leading-7 text-slate-600">{item.text}</p></CardContent></Card>)}
+        <div className="mx-auto max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Our Services</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Cleaner air, safer systems, and a fresher home</h2><p className="mt-4 text-lg text-slate-600">From ducts and vents to chimneys and attic insulation, we help remove buildup where it hides and support a cleaner, more comfortable home.</p></div>
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {[
+            { icon: Wind, title: "Air Duct Cleaning", text: "We clean supply and return ducts to remove dust, debris, and buildup that can circulate through your home. Cleaner ductwork helps improve airflow and gives your HVAC system a fresher path to work through." },
+            { icon: Home, title: "Vent & Register Cleaning", text: "We detail vents, registers, and grilles so the visible parts of your airflow system look clean again. It is a simple upgrade that helps each room feel fresher and better maintained." },
+            { icon: ShieldCheck, title: "HVAC System Care", text: "We focus on the airflow areas around your HVAC system where dust and debris can collect over time. This helps support smoother performance and keeps your system care connected to the duct cleaning process." },
+            { icon: Sparkles, title: "Chimney Cleaning", text: "We remove soot, ash, and debris from the chimney system to help your fireplace vent more cleanly. Regular chimney cleaning supports safer seasonal use and can help reduce smoke and odor problems." },
+            { icon: Leaf, title: "Attic Cleaning and Insulation", text: "We clean attic spaces by removing dust, debris, and old unwanted material that can affect comfort and air quality. When needed, we can refresh insulation to help your home stay cleaner and more energy efficient." },
+          ].map((item) => <Card key={item.title} className="rounded-3xl border-slate-200 bg-white shadow-sm"><CardContent className="p-7"><div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700"><item.icon aria-hidden="true" /></div><h3 className="text-xl font-bold text-slate-950">{item.title}</h3><p className="mt-3 leading-7 text-slate-600">{item.text}</p></CardContent></Card>)}
         </div>
       </section>
 
@@ -427,33 +499,57 @@ export default function AirDuctCleaningLandingPage() {
             <p className="mt-4 text-lg text-slate-600">A quick look at clean setups, careful duct work, and finished details from residential jobs.</p>
           </div>
 
-          <div className="mt-12 grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center">
+          <div className="mx-auto mt-12 max-w-5xl">
             <div className="relative overflow-hidden rounded-[2rem] bg-slate-950 shadow-2xl ring-1 ring-emerald-100">
               <motion.div
                 key={`${activeGalleryItem.type}-${activeGalleryIndex}`}
                 initial={{ opacity: 0, x: 24 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.35, ease: "easeOut" }}
-                className="aspect-[16/10] min-h-[18rem] sm:min-h-[26rem]"
+                className="aspect-[16/10] min-h-[18rem] bg-slate-950 sm:min-h-[26rem]"
               >
                 {activeGalleryItem.type === "video" ? (
-                  <video
-                    className="h-full w-full object-cover"
-                    src={activeGalleryItem.src}
-                    poster={activeGalleryItem.poster}
-                    muted
-                    playsInline
-                    controls
-                    preload="metadata"
-                    aria-label={activeGalleryItem.alt}
-                  />
+                  <div key={`video-${activeGalleryIndex}`} className="relative h-full w-full">
+                    <video
+                      ref={galleryVideoRef}
+                      className="h-full w-full object-contain"
+                      src={activeGalleryItem.src}
+                      poster={activeGalleryItem.poster}
+                      muted
+                      playsInline
+                      controls
+                      preload="metadata"
+                      aria-label={activeGalleryItem.alt}
+                      onLoadedMetadata={() => setIsGalleryVideoPlaying(false)}
+                      onPlay={() => setIsGalleryVideoPlaying(true)}
+                      onPause={() => setIsGalleryVideoPlaying(false)}
+                      onEnded={() => setIsGalleryVideoPlaying(false)}
+                    />
+                    {!isGalleryVideoPlaying && (
+                      <button
+                        type="button"
+                        onClick={playActiveGalleryVideo}
+                        className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-emerald-600 text-white shadow-[0_18px_45px_rgba(15,23,42,0.5)] ring-8 ring-slate-950/25 transition hover:scale-105 hover:bg-emerald-500 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                        aria-label={`Play ${activeGalleryItem.title}`}
+                      >
+                        <Play className="ml-1 h-9 w-9 fill-current" aria-hidden="true" />
+                      </button>
+                    )}
+                  </div>
                 ) : (
-                  <img
-                    src={activeGalleryItem.src}
-                    alt={activeGalleryItem.alt}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
+                  <button
+                    type="button"
+                    onClick={() => setExpandedGalleryItem(activeGalleryItem)}
+                    className="flex h-full w-full items-center justify-center focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-emerald-200"
+                    aria-label={`Expand ${activeGalleryItem.title}`}
+                  >
+                    <img
+                      src={activeGalleryItem.src}
+                      alt={activeGalleryItem.alt}
+                      className="max-h-full max-w-full object-contain"
+                      loading="lazy"
+                    />
+                  </button>
                 )}
               </motion.div>
 
@@ -466,57 +562,43 @@ export default function AirDuctCleaningLandingPage() {
               <button
                 type="button"
                 onClick={goToPreviousGalleryItem}
-                className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 text-slate-900 shadow-lg transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                className="absolute left-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-emerald-600 text-white shadow-[0_14px_36px_rgba(15,23,42,0.45)] ring-4 ring-slate-950/20 transition hover:scale-105 hover:bg-emerald-500 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
                 aria-label="Previous gallery item"
               >
-                <ChevronLeft className="h-6 w-6" aria-hidden="true" />
+                <ChevronLeft className="h-7 w-7" aria-hidden="true" />
               </button>
               <button
                 type="button"
                 onClick={goToNextGalleryItem}
-                className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/92 text-slate-900 shadow-lg transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                className="absolute right-4 top-1/2 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border-2 border-white bg-emerald-600 text-white shadow-[0_14px_36px_rgba(15,23,42,0.45)] ring-4 ring-slate-950/20 transition hover:scale-105 hover:bg-emerald-500 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
                 aria-label="Next gallery item"
               >
-                <ChevronRight className="h-6 w-6" aria-hidden="true" />
+                <ChevronRight className="h-7 w-7" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setExpandedGalleryItem(activeGalleryItem)}
+                className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/92 text-slate-900 shadow-lg transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+                aria-label={`Expand ${activeGalleryItem.title}`}
+              >
+                <Maximize2 className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
-            <div className="rounded-[2rem] bg-emerald-950 p-6 text-white shadow-xl">
-              <p className="text-sm font-bold uppercase tracking-widest text-emerald-200">Project Slides</p>
-              <div className="mt-5 grid gap-3">
-                {visibleGalleryMedia.map((item, index) => (
-                  <button
-                    key={`${item.title}-${index}`}
-                    type="button"
-                    onClick={() => setActiveGalleryIndex(index)}
-                    className={cx(
-                      "rounded-2xl border p-4 text-left transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200",
-                      index === activeGalleryIndex
-                        ? "border-emerald-300 bg-white text-slate-950"
-                        : "border-white/15 bg-white/8 text-emerald-50 hover:border-emerald-300/70 hover:bg-white/12"
-                    )}
-                    aria-current={index === activeGalleryIndex ? "true" : undefined}
-                  >
-                    <span className="text-xs font-bold uppercase tracking-widest text-emerald-400">{item.type}</span>
-                    <span className="mt-1 block text-base font-bold">{item.title}</span>
-                  </button>
-                ))}
-              </div>
-              <div className="mt-6 flex items-center justify-center gap-2" aria-label="Gallery pagination">
-                {visibleGalleryMedia.map((item, index) => (
-                  <button
-                    key={`gallery-dot-${item.title}`}
-                    type="button"
-                    onClick={() => setActiveGalleryIndex(index)}
-                    className={cx(
-                      "h-3 rounded-full transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200",
-                      index === activeGalleryIndex ? "w-8 bg-emerald-300" : "w-3 bg-white/35 hover:bg-white/70"
-                    )}
-                    aria-label={`Go to gallery item ${index + 1}`}
-                    aria-current={index === activeGalleryIndex ? "true" : undefined}
-                  />
-                ))}
-              </div>
+            <div className="mt-6 flex items-center justify-center gap-2" aria-label="Gallery pagination">
+              {visibleGalleryMedia.map((item, index) => (
+                <button
+                  key={`gallery-dot-${item.title}`}
+                  type="button"
+                  onClick={() => setActiveGalleryIndex(index)}
+                  className={cx(
+                    "h-3 rounded-full transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200",
+                    index === activeGalleryIndex ? "w-8 bg-emerald-600" : "w-3 bg-slate-300 hover:bg-emerald-300"
+                  )}
+                  aria-label={`Go to gallery item ${index + 1}`}
+                  aria-current={index === activeGalleryIndex ? "true" : undefined}
+                />
+              ))}
             </div>
           </div>
         </div>
@@ -595,7 +677,38 @@ export default function AirDuctCleaningLandingPage() {
           ))}
         </div>
         <div className="relative z-10 grid gap-10 rounded-[2rem] bg-white/95 p-6 shadow-xl ring-1 ring-slate-200 backdrop-blur-sm md:grid-cols-2 md:p-10">
-          <div><p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Free Quote</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Ready for cleaner air?</h2><p className="mt-4 text-lg leading-8 text-slate-600">Fill out the form and we’ll contact you shortly with pricing and availability in {serviceArea}.</p><div className="mt-8 rounded-3xl bg-slate-50 p-6"><p className="font-bold text-slate-950">Prefer to call?</p><div className="mt-2 flex flex-col gap-2"><a href={`tel:${cleanPhone}`} className="inline-flex items-center text-lg font-bold text-emerald-700 hover:text-emerald-900"><Phone className="mr-2 h-5 w-5" aria-hidden="true" /> {phone}</a><a href={`mailto:${email}`} className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><Mail className="mr-2 h-4 w-4" aria-hidden="true" /> {email}</a><p className="inline-flex items-center text-base font-semibold text-slate-700"><MapPin className="mr-2 h-4 w-4 text-emerald-700" aria-hidden="true" /> {location}</p><a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><MessageCircle className="mr-2 h-4 w-4" aria-hidden="true" /> Message us on WhatsApp</a></div></div></div>
+          <div>
+            <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Free Quote</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Ready for cleaner air?</h2>
+            <p className="mt-4 text-lg leading-8 text-slate-600">Fill out the form and we’ll contact you shortly with pricing and availability in {serviceArea}.</p>
+
+            <div className="mt-8 rounded-3xl bg-slate-50 p-6">
+              <p className="font-bold text-slate-950">Prefer to call?</p>
+              <div className="mt-2 flex flex-col gap-2">
+                <a href={`tel:${cleanPhone}`} className="inline-flex items-center text-lg font-bold text-emerald-700 hover:text-emerald-900"><Phone className="mr-2 h-5 w-5" aria-hidden="true" /> {phone}</a>
+                <a href={`mailto:${email}`} className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><Mail className="mr-2 h-4 w-4" aria-hidden="true" /> {email}</a>
+                <p className="inline-flex items-center text-base font-semibold text-slate-700"><MapPin className="mr-2 h-4 w-4 text-emerald-700" aria-hidden="true" /> {location}</p>
+                <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-base font-semibold text-slate-700 hover:text-emerald-700"><WhatsAppIcon className="mr-2 h-5 w-5" /> Message us on WhatsApp</a>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200">
+              <p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Payment Options</p>
+              <div className="mt-4 flex flex-wrap items-center gap-3" aria-label="Accepted payment methods">
+                <span className="flex h-10 w-16 items-center justify-center rounded-md bg-white text-lg font-black italic tracking-tight text-blue-800 shadow-sm ring-1 ring-slate-200" aria-label="Visa">VISA</span>
+                <span className="relative flex h-10 w-16 items-center justify-center rounded-md bg-white shadow-sm ring-1 ring-slate-200" aria-label="Mastercard">
+                  <span className="h-7 w-7 rounded-full bg-red-500" />
+                  <span className="-ml-3 h-7 w-7 rounded-full bg-amber-400 mix-blend-multiply" />
+                </span>
+                <span className="flex h-10 w-20 items-center justify-center rounded-md bg-white px-2 text-center text-[10px] font-black uppercase leading-3 text-blue-700 shadow-sm ring-1 ring-slate-200" aria-label="American Express">American<br />Express</span>
+                <span className="flex h-10 w-14 items-center justify-center rounded-md bg-emerald-700 text-2xl font-black text-white shadow-sm ring-1 ring-emerald-800" aria-label="Cash">$</span>
+                <span className="flex h-10 w-20 items-center justify-center rounded-md bg-white px-2 shadow-sm ring-1 ring-slate-200" aria-label="Check">
+                  <span className="w-full border-t-2 border-blue-300 pt-1 text-right text-xs font-semibold italic text-blue-500">Check</span>
+                </span>
+                <span className="flex h-10 w-20 items-center justify-center rounded-md bg-white text-lg font-black tracking-tight text-sky-600 shadow-sm ring-1 ring-slate-200" aria-label="Venmo">venmo</span>
+              </div>
+            </div>
+          </div>
           <form onSubmit={handleLeadSubmit} className="grid gap-4" aria-label="Request a free quote">
             <div><label htmlFor="name" className="mb-2 block text-sm font-semibold text-slate-700">Full name</label><input id="name" name="name" type="text" autoComplete="name" maxLength={60} value={leadForm.name} onChange={(event) => setLeadForm({ ...leadForm, name: event.target.value })} required className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100" /></div>
             <div><label htmlFor="phone" className="mb-2 block text-sm font-semibold text-slate-700">Phone number</label><input id="phone" name="phone" type="tel" autoComplete="tel" maxLength={25} value={leadForm.phone} onChange={(event) => setLeadForm({ ...leadForm, phone: event.target.value })} required className="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100" /></div>
@@ -607,6 +720,46 @@ export default function AirDuctCleaningLandingPage() {
       </section>
 
       <footer className="relative z-10 border-t border-slate-200 bg-white/75 py-8 backdrop-blur-[1px]"><div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 text-sm text-slate-600 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8"><p>{footerText}</p><div className="flex gap-5"><a href="#services" className="hover:text-emerald-700">Services</a><a href="#contact" className="hover:text-emerald-700">Contact</a><a href={`tel:${cleanPhone}`} className="hover:text-emerald-700">Call Now</a></div></div></footer>
+
+      {expandedGalleryItem && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 p-4 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-label={expandedGalleryItem.title}
+          onClick={() => setExpandedGalleryItem(null)}
+        >
+          <div className="relative flex h-full w-full max-w-6xl items-center justify-center" onClick={(event) => event.stopPropagation()}>
+            <button
+              type="button"
+              onClick={() => setExpandedGalleryItem(null)}
+              className="absolute right-0 top-0 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-900 shadow-lg transition hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+              aria-label="Close expanded gallery item"
+            >
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
+
+            {expandedGalleryItem.type === "video" ? (
+              <video
+                className="max-h-[88vh] max-w-full rounded-2xl bg-black object-contain shadow-2xl"
+                src={expandedGalleryItem.src}
+                poster={expandedGalleryItem.poster}
+                muted
+                playsInline
+                controls
+                autoPlay
+                aria-label={expandedGalleryItem.alt}
+              />
+            ) : (
+              <img
+                src={expandedGalleryItem.src}
+                alt={expandedGalleryItem.alt}
+                className="max-h-[88vh] max-w-full rounded-2xl object-contain shadow-2xl"
+              />
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
