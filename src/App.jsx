@@ -203,6 +203,10 @@ const defaultReviews = [
   { name: "Olivia K.", rating: 5, quote: "Great service and fair pricing. I would definitely recommend them." },
 ];
 
+function sortReviewsByRating(reviewList) {
+  return [...reviewList].sort((firstReview, secondReview) => secondReview.rating - firstReview.rating);
+}
+
 function fileNameToTitle(path) {
   const fileName = path.split("/").pop()?.replace(/\.[^/.]+$/, "") || "Project media";
   return fileName
@@ -283,10 +287,10 @@ function getInitialReviews() {
       rating: Math.min(5, Math.max(1, Number(review.rating) || 5)),
       quote: sanitizeText(review.quote, 220),
     })).filter((review) => review.name && review.quote);
-    return safeReviews.length ? safeReviews : defaultReviews;
+    return safeReviews.length ? sortReviewsByRating(safeReviews) : sortReviewsByRating(defaultReviews);
   } catch {
     window.localStorage.removeItem("airDuctReviews");
-    return defaultReviews;
+    return sortReviewsByRating(defaultReviews);
   }
 }
 
@@ -346,7 +350,7 @@ export default function AirDuctCleaningLandingPage() {
       return;
     }
 
-    setReviews([{ name, rating, quote }, ...reviews].slice(0, 20));
+    setReviews(sortReviewsByRating([{ name, rating, quote }, ...reviews]).slice(0, 20));
     setReviewForm({ name: "", rating: 5, quote: "" });
     setReviewStatus("Thank you! Your review was saved in this browser.");
   };
@@ -718,7 +722,7 @@ export default function AirDuctCleaningLandingPage() {
 
       <section id="reviews" className="relative z-10 bg-emerald-50/72 py-16 backdrop-blur-[1px]">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Customer Reviews</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Homeowners trust our clean air service</h2><p className="mt-4 text-lg text-slate-600">Demo reviews are stored locally in the browser. For production, connect to a secure backend and approve reviews before publishing.</p></div>
+          <div className="mx-auto max-w-3xl text-center"><p className="text-sm font-bold uppercase tracking-widest text-emerald-700">Customer Reviews</p><h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">Homeowners trust our clean air service</h2><p className="mt-4 text-lg text-slate-600">Friendly service, clear communication, and careful work from the first call to the final walkthrough.</p></div>
           <div className="mt-12 grid gap-6 md:grid-cols-3">{reviews.slice(0, 6).map((review, index) => <Card key={`${review.name}-${index}`} className="rounded-3xl border-emerald-100 bg-white shadow-sm"><CardContent className="p-7"><div className="mb-4 flex gap-1 text-lime-500" aria-label={`${review.rating} star rating`}>{[1, 2, 3, 4, 5].map((star) => <Star key={star} className={`h-5 w-5 ${star <= review.rating ? "fill-current" : ""}`} aria-hidden="true" />)}</div><p className="leading-7 text-slate-700">“{review.quote}”</p><p className="mt-5 font-bold text-slate-950">{review.name}</p></CardContent></Card>)}</div>
           <div className="mx-auto mt-12 max-w-2xl rounded-[2rem] bg-white p-6 shadow-xl ring-1 ring-slate-200 sm:p-8">
             <h3 className="text-2xl font-bold text-slate-950">Leave a Review</h3><p className="mt-2 text-slate-600">This demo does not publish HTML and does not execute user input.</p>
