@@ -29,7 +29,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  if (!process.env.RESEND_API_KEY || !process.env.LEAD_TO_EMAIL) {
+  const leadToEmail = String(process.env.LEAD_TO_EMAIL || "").trim();
+
+  if (!process.env.RESEND_API_KEY || !leadToEmail) {
     return res.status(500).json({ error: "Email service is not configured" });
   }
 
@@ -52,8 +54,8 @@ export default async function handler(req, res) {
 
     const { data, error } = await resend.emails.send({
       from: "Air Duct Leads <onboarding@resend.dev>",
-      to: process.env.LEAD_TO_EMAIL,
-      replyTo: email || process.env.LEAD_TO_EMAIL,
+      to: leadToEmail,
+      replyTo: email || leadToEmail,
       subject: "New Air Duct Cleaning Lead",
       html: `
         <h2>New Lead Request</h2>

@@ -382,7 +382,8 @@ export default function AirDuctCleaningLandingPage() {
       });
 
       if (!response.ok) {
-        setLeadStatus("Something went wrong. Please try again.");
+        const result = await response.json().catch(() => null);
+        setLeadStatus(result?.error || "Something went wrong. Please try again.");
         return;
       }
 
